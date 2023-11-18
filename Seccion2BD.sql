@@ -1,10 +1,12 @@
-CREATE DATABASE Fuchibol;/*Creamos la Base de datos*/
+/*Paso 1:Creamos la Base de datos*/
+CREATE DATABASE Fuchibol;
 
-USE Fuchibol;/*Usamos la base de datos creada*/
+/*Paso 2:Usamos la base de datos creada*/
+USE Fuchibol;
 
-/*Creamos las tablas de la base de datos*/
+/*Paso 3:Creamos las tablas de la base de datos*/
 CREATE TABLE Estadios (
-    id_estadio INT PRIMARY KEY NOT NULL,
+    id_estadio INT NOT NULL,
     nombre VARCHAR(20),
 	capacidad INT,
     direccion VARCHAR(20),
@@ -15,41 +17,48 @@ CREATE TABLE Estadios (
     propietario VARCHAR(20),
     dimensiones VARCHAR(20),
     otras_instalaciones VARCHAR(20),
-    localidad VARCHAR(20)
+    localidad VARCHAR(20),
+    PRIMARY KEY (id_estadio)
 );
 
 CREATE TABLE Provincias (
-	id_provincia INT PRIMARY KEY NOT NULL, 
-    nombre_provincia VARCHAR(20)
+	id_provincia INT NOT NULL, 
+    nombre_provincia VARCHAR(20),
+    PRIMARY KEY (id_provincia)
 );
 
 CREATE TABLE SituacionNacionalidad (
-	id_situacion INT PRIMARY KEY NOT NULL,
-    situacion VARCHAR(20)
+	id_situacion INT NOT NULL,
+    situacion VARCHAR(20),
+    PRIMARY KEY (id_situacion)
 );
 
 CREATE TABLE Representantes (
-	id_representante INT PRIMARY KEY NOT NULL, 
-    nombre_representante VARCHAR(20)
+	id_representante INT NOT NULL, 
+    nombre_representante VARCHAR(20),
+    PRIMARY KEY (id_representante)
 );
 
 CREATE TABLE Paises(
-	id_pais INT PRIMARY KEY NOT NULL, 
-    abreviatura VARCHAR(5)
+	id_pais INT NOT NULL, 
+    abreviatura VARCHAR(5),
+    PRIMARY KEY (id_pais)
 );
 
 CREATE TABLE Pie(
-	id_pie INT PRIMARY KEY NOT NULL, 
-    pie VARCHAR(20)
+	id_pie INT NOT NULL, 
+    pie VARCHAR(20),
+    PRIMARY KEY (id_pie)
 );
 
 CREATE TABLE Demarcacion(
-	id_demarcacion INT PRIMARY KEY NOT NULL, 
-    demarcacion VARCHAR(20)
+	id_demarcacion INT NOT NULL, 
+    demarcacion VARCHAR(20),
+    PRIMARY KEY (id_demarcacion)
 );
 
 CREATE TABLE Equipos(
-	id_equipo INT PRIMARY KEY NOT NULL,
+	id_equipo INT NOT NULL,
     nombre_equipo VARCHAR(20),
     nombre_oficial VARCHAR(20),
     direccion VARCHAR(20),
@@ -67,12 +76,11 @@ CREATE TABLE Equipos(
     himno VARCHAR (500),
     id_estadio INT NOT NULL, 
     localidad VARCHAR(20),
-    CONSTRAINT fk_equipos_provincia FOREIGN KEY (id_provincia) REFERENCES Provincias (id_provincia),
-    CONSTRAINT fk_equipos_estadio FOREIGN KEY (id_estadio) REFERENCES Estadios (id_estadio) 
+    PRIMARY KEY (id_equipo)
 );
 
 CREATE TABLE Jugadores(
-	id_jugador INT PRIMARY KEY NOT NULL, 
+	id_jugador INT NOT NULL, 
     nombre_futbolistico VARCHAR(20),
     nombre_jugador VARCHAR(20),
     apellidos_jugador VARCHAR(20),
@@ -91,11 +99,19 @@ CREATE TABLE Jugadores(
     id_representante INT NOT NULL, 
     pais_nacionalidad VARCHAR(20),
     retirado VARCHAR(20),
-    CONSTRAINT fk_jug_provincia FOREIGN KEY (id_provincia) REFERENCES Provincias (id_provincia), 
-    CONSTRAINT fk_jug_pais FOREIGN KEY (id_pais) REFERENCES Paises (id_pais),
-    CONSTRAINT fk_jug_demarcacion FOREIGN KEY (id_demarcacion) REFERENCES Demarcacion (id_demarcacion),
-    CONSTRAINT fk_jug_pie FOREIGN KEY (id_pie) REFERENCES Pie (id_pie),
-    CONSTRAINT fk_jug_situacion FOREIGN KEY (id_situacion) REFERENCES SituacionNacionalidad (id_situacion), 
-    CONSTRAINT fk_jug_cantera FOREIGN KEY (cantera) REFERENCES Equipos (id_equipo), 
-    CONSTRAINT fk_jug_representante FOREIGN KEY (id_representante) REFERENCES Representantes (id_representante) 
+    PRIMARY KEY (id_jugador)
 );
+
+/*Paso 4:Llaves foraneas*/
+ALTER TABLE Equipos add(constraint FK_equiposProv foreign key (id_provincia) references Provincias (id_provincia))
+ALTER TABLE Equipos add(constraint FK_equiposEstadio foreign key (id_estadio) references Estadios (id_estadio))
+ALTER TABLE Jugadores add(constraint FK_jugProvincia FOREIGN KEY (id_provincia) REFERENCES Provincias (id_provincia))
+ALTER TABLE Jugadores add(constraint FK_jugPais FOREIGN KEY (id_pais) REFERENCES Paises (id_pais))
+ALTER TABLE Jugadores add(constraint FK_jugDemarcacion FOREIGN KEY (id_demarcacion) REFERENCES Demarcacion (id_demarcacion))
+ALTER TABLE Jugadores add(constraint FK_jugPie FOREIGN KEY (id_pie) REFERENCES Pie (id_pie))
+ALTER TABLE Jugadores add(constraint FK_jugSituacion FOREIGN KEY (id_situacion) REFERENCES SituacionNacionalidad (id_situacion))
+ALTER TABLE Jugadores add(constraint FK_jugCantera FOREIGN KEY (cantera) REFERENCES Equipos (id_equipo))
+ALTER TABLE Jugadores add(constraint FK_jugRepresentante FOREIGN KEY (id_representante) REFERENCES Representantes (id_representante))
+
+
+
